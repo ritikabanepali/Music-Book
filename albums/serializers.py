@@ -1,17 +1,49 @@
-from django.contrib.auth.models import User # the default user object
-from rest_framework import serializers # provides the tools to convert complex data types into python data types
+from rest_framework import serializers
+from rest_framework.validators import ValidationError, UniqueTogetherValidator
+from .models import Artist, Album, Review
 
-class UserRegisterSerializer(serializers.ModelSerializer): # generates serializer fields and validators based on a Django model
-    password = serializers.CharField(write_only=True) # adds a password field to the serializer
+
+class ArtistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Artist
+        fields = ['id', 'name']
+
+
+class AlbumSerializer(serializers.ModelSerializer):
+    artist = ArtistSerializer(read_only=True)
+    artist_id = serializers.PrimaryKeyRelatedField(
+        queryset=Artist.objects.all(), source='artist', write_only=True)
+
+    cover_image_url = serializers.SerializerMethodField() # read only
+
+    def get_cover_image_url(self, obj): # the absolute path for the url
+        request = self.context.get('request')
+        if obj.cover_image and request:
+            return request.build_absolute_uri(obj.cover_image.url)
+        return None
 
     class Meta:
-        model = User # configuration for the model serializer
-        fields = ('username', 'password', 'email') # This specifies which fields from the User model should be included in the serializer for processing
+        model = Album
+        fields = ['id', 'title', 'artist', 'artist_id', 'release_year', 'genre', 'cover_image', 'cover_image_url']
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Album.objects.all(),
+                fields=['title', 'artist'],
+                message="This artist already has an album with this title."
+            )
+        ]
 
-    def create(self, validated_data):
-        user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data.get('email'),
-            password=validated_data['password']
-        )
-        return user
+
+class ReviewSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    album_id = serializers.PrimaryKeyRelatedField(
+        queryset=Album.objects.all(), source='album', write_only=True)
+
+    class Meta:
+        model = Review
+        fields = ['id', 'album_id', 'user', 'rating', 'comment', 'created_at']
+
+    def validate_rating(self, value):
+        if not (1 <= value <= 5):
+            raise serializers.ValidationError("Rating must be an integer between 1 and 5.")
+        return value
