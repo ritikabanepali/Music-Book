@@ -1,0 +1,35 @@
+services: # where you define individual containers
+  db: # database container
+    image: postgres:15
+    volumes: # for persistence
+      - postgres_data:/var/lib/postgresql/data/
+    environment: # sets env variables inside the db container to configure postgres
+      - POSTGRES_DB=${POSTGRES_DB} # the database name
+      - POSTGRES_USER=${POSTGRES_USER} # database superuser info
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432" # connects local machine port to container port
+
+  web: # configuration for Django web app
+    build: . # build an image from the Dockerfile located in the current directory
+    command: gunicorn music_api.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      # IMPORTANT: Add your secret key and Spotify credentials
+      - SECRET_KEY=${SECRET_KEY}
+      - SPOTIFY_CLIENT_ID=${SPOTIFY_CLIENT_ID}
+      - SPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET}
+      - SPOTIFY_REDIRECT_URI=${SPOTIFY_REDIRECT_URI}
+
+volumes:
+  postgres_data:

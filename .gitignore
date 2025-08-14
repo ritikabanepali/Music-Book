@@ -1,4 +1,9 @@
-# .gitignore file
-
-# Ignore environment variables file
+# Environment variables
 .env
+
+# Database file
+db.sqlite3
+
+# Python cache
+__pycache__/
+*.pyc
