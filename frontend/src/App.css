@@ -1,0 +1,91 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #facdf5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  /*Move everything up from the center */
+  justify-content: flex-start; /* Aligns content to the top */
+  padding-top: 5vh; /* Adds some space from the top edge */
+  
+  font-size: calc(10px + 2vmin);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); 
+}
+
+.App-header form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* Adds space between form elements */
+  color: #333333; /* Darker text color for labels for readability */
+  text-shadow: none; /* Remove shadow from form text */
+}
+
+.App-header form h2 {
+  margin-bottom: 15px; /* Adjust this value to get the spacing you want */
+}
+
+.App-header h2 {
+  margin-bottom: 15px; /* Adjust this value to get the spacing you want */
+}
+
+/* Style for the button */
+.App-header button {
+  background-color: white; /* White background */
+  color: #555; /* Dark text color */
+  border: none; /* Remove default border */
+  border-radius: 20px; /* Makes the button rounded */
+  padding: 10px 25px; /* Add some padding */
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer; /* Show a pointer on hover */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+  transition: transform 0.2s; /* Smooth transition for click effect */
+  margin-left: 10px;
+}
+
+.App-header button:focus {
+  outline: none; /* Removes the blue outline when the button is clicked or tabbed to */
+}
+
+.App-header button:active {
+  transform: scale(0.95);
+}
+
+.App-header input {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  
+  /* Add this line to create space between the label and the textbox */
+  margin-left: 10px; 
+}
+
+.App-header form label,
+.App-header h2,
+.App-header form button {
+  font-family: 'Mozilla Headline', sans-serif; /* Use the name of your chosen font */
+  font-weight: 700; /* Optional: Makes the text bold */
+  letter-spacing: 1px; /* Optional: Adds a little space between letters */
+}
+
+.arizonia-regular {
+  font-family: "Arizonia", cursive;
+  font-weight: 400;
+  font-size: 6rem;
+  font-style: normal;
+  margin-bottom: 10px; 
+}
+
+.mozilla-headline {
+  font-family: "Mozilla Headline", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 200;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
